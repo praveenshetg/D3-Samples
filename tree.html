@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+	<head>
+		<title>D3 Tree Layout</title>
+		<script src="d3.v3.min.js"/></script>
+	</head>
+<body>
+
+	<script>
+    	var canvas =  d3.select("body").append("svg")
+    								.attr("width",500)
+    								.attr("height",500)
+    								.append("g").attr("transform","translate(50,50)");
+    
+    	
+    	var data = {"Manager ID":0,"CCY":"INR","Absence Days":9,"Absence Type":"","Competency Average":2.25,"altCruxLevel":null,"Role":"CEO","City":"Mumbai","ID Number":1,"cruxLevel":1,"displayLabel":"1","rolledUpValue":0,"displayColor":"orange","colorField":"All","children":[{"Manager ID":1,"CCY":"INR","Absence Days":7,"Absence Type":"","Competency Average":2.75,"altCruxLevel":null,"Role":"COO","City":"Mumbai","ID Number":1505,"cruxLevel":2,"displayLabel":"1505","rolledUpValue":0,"displayColor":"orange","colorField":"All"},{"Manager ID":1,"CCY":"INR","Absence Days":10,"Absence Type":"Sickness","Competency Average":3,"altCruxLevel":null,"Role":"Head of Research","City":"Mumbai","ID Number":1234,"cruxLevel":2,"displayLabel":"1234","rolledUpValue":0,"displayColor":"orange","colorField":"All"},{"Manager ID":1,"CCY":"INR","Absence Days":6,"Absence Type":"","Competency Average":2.75,"altCruxLevel":null,"Role":"Sales Director","City":"Mumbai","ID Number":58,"cruxLevel":2,"displayLabel":"58","rolledUpValue":0,"displayColor":"orange","colorField":"All"},{"Manager ID":1,"CCY":"INR","Absence Days":11,"Absence Type":"Sickness","Competency Average":1.75,"altCruxLevel":null,"Role":"Head of Recruitment","City":"Mumbai","ID Number":42,"cruxLevel":2,"displayLabel":"42","rolledUpValue":0,"displayColor":"orange","colorField":"All"},{"Manager ID":1,"CCY":"INR","Absence Days":6,"Absence Type":"Sickness","Competency Average":2.5,"altCruxLevel":null,"Role":"Executive Assistant","City":"Mumbai","ID Number":3,"cruxLevel":2,"displayLabel":"3","rolledUpValue":0,"displayColor":"orange","colorField":"All"},{"Manager ID":1,"CCY":"INR","Absence Days":8,"Absence Type":"","Competency Average":2.25,"altCruxLevel":null,"Role":"CFO","City":"Mumbai","ID Number":2,"cruxLevel":2,"displayLabel":"2","rolledUpValue":0,"displayColor":"orange","colorField":"All"}]}
+    	
+    	
+    	var tree = d3.layout.tree()
+    				.size([400,200]);
+    				
+    	var nodes =	tree.nodes(data)
+    
+    	var links = tree.links(nodes)
+    
+    	
+    	var node = canvas.selectAll(".node")
+    				.data(nodes)
+    				.enter()
+    				.append("g")
+    				.attr("class","node")
+    				.attr("transform", function(d){ return "translate("+ d.x + ","+d.y+")"; })
+    				
+    		node.append("circle")
+    				.attr("r",7)
+    				//.attr("cx",function(d){ return d.x;})
+    				//.attr("cy",function(d){ return d.y;})
+    				.attr("fill","white")
+    				.attr("stroke","orange")
+    				.attr("stroke-width","2");	
+    				
+    		node.append("text").text(function(d){ return d["displayLabel"];})
+    					.attr("dy", "1.5em")
+    					.attr("text-anchor", "middle");
+    		
+  	  var diagonalTemp = d3.svg.diagonal()
+    							.source({x:10, y:10})
+    							.target({x:100, y:100})
+    							
+  	  var diagonal = d3.svg.diagonal()
+    						 .projection(function(d){return [d.x,d.y];});
+    	
+    	
+    	function elbow(d, i) {
+    		return "M" + d.source.x + "," + (d.source.y+42) + "V" +(d.target.y-50)
+    					+ "H" + d.target.x + "V" + (d.target.y);
+  	  }
+    	  canvas.selectAll(".link")
+    					.data(links)
+    					.enter()
+    						.append("path")
+    						.attr("class","link")
+    						.attr("fill","none")
+    						.attr("stroke","gray")
+    						.attr("d",elbow);
+
+	</script>
+</body
+</html>
